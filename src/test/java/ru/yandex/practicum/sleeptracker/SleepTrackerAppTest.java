@@ -26,6 +26,7 @@ public class SleepTrackerAppTest {
         String result = new TotalSessionsAnalyzer().apply(list).getValue();
         assertEquals("3", result);
     }
+
     @Test
     void insomniac_nights_empty() {
         assertEquals("0", new InsomniacNightsCountAnalyzer().apply(List.of()).getValue());
@@ -69,6 +70,7 @@ public class SleepTrackerAppTest {
         );
         assertEquals("1", new InsomniacNightsCountAnalyzer().apply(list).getValue());
     }
+
     @Test
     void chronotype_owl() {
         List<SleepSession> list = List.of(
@@ -92,6 +94,7 @@ public class SleepTrackerAppTest {
         );
         assertEquals("Жаворонок", new ChronotypeAnalyzer().apply(list).getValue());
     }
+
     @Test
     void minDuration_empty() {
         assertEquals("0", new MinDurationAnalyzer().apply(List.of()).getValue());
@@ -105,6 +108,7 @@ public class SleepTrackerAppTest {
         );
         assertEquals("360", new MinDurationAnalyzer().apply(list).getValue());
     }
+
     @Test
     void maxDuration_empty() {
         assertEquals("0", new MaxDurationAnalyzer().apply(List.of()).getValue());
@@ -118,6 +122,7 @@ public class SleepTrackerAppTest {
         );
         assertEquals("480", new MaxDurationAnalyzer().apply(list).getValue());
     }
+
     @Test
     void avgDuration_empty() {
         assertEquals("0", new AvgDurationAnalyzer().apply(List.of()).getValue());
@@ -131,6 +136,7 @@ public class SleepTrackerAppTest {
         );
         assertEquals("420", new AvgDurationAnalyzer().apply(list).getValue());
     }
+
     @Test
     void badQuality_empty() {
         assertEquals("0", new BadQualityCountAnalyzer().apply(List.of()).getValue());
