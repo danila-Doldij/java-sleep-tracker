@@ -9,6 +9,11 @@ public class SleepAnalysisResult {
         this.value = value;
     }
 
-    public String getDescription() { return description; }
-    public String getValue() { return value; }
+    public String getDescription() {
+        return description;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
