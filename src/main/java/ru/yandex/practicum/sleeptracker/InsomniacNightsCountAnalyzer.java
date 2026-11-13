@@ -1,8 +1,11 @@
 package ru.yandex.practicum.sleeptracker;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class InsomniacNightsCountAnalyzer implements SleepAnalyzer {
 
@@ -12,31 +15,38 @@ public class InsomniacNightsCountAnalyzer implements SleepAnalyzer {
             return new SleepAnalysisResult("Бессонных ночей", "0");
         }
 
-        LocalDate startDate = sessions.get(0).getSleepStart().toLocalDate();
+        LocalDate firstStartDate = sessions.get(0).getSleepStart().toLocalDate();
         if (sessions.get(0).getSleepStart().getHour() < 12) {
-            startDate = startDate.minusDays(1);
+            firstStartDate = firstStartDate.minusDays(1);
         }
 
-        LocalDate endDate = sessions.get(sessions.size() - 1).getSleepEnd().toLocalDate();
+        LocalDate lastEndDate = sessions.get(sessions.size() - 1).getSleepEnd().toLocalDate();
 
-        long totalNights = ChronoUnit.DAYS.between(startDate, endDate);
+        long totalNights = ChronoUnit.DAYS.between(firstStartDate, lastEndDate);
 
-        long sleepingNights = sessions.stream()
-                .filter(this::isNightSleep)
-                .count();
+        Set<LocalDate> nightsWithSleep = sessions.stream()
+                .map(this::getCoveredNightDate)
+                .filter(date -> date != null)
+                .collect(Collectors.toSet());
 
+        long sleepingNights = nightsWithSleep.size();
         long result = Math.max(0, totalNights - sleepingNights);
+
         return new SleepAnalysisResult("Бессонных ночей", String.valueOf(result));
     }
 
-    private boolean isNightSleep(SleepSession session) {
-        var start = session.getSleepStart();
-        var end = session.getSleepEnd();
+    private LocalDate getCoveredNightDate(SleepSession session) {
+        LocalDateTime start = session.getSleepStart();
+        LocalDateTime end = session.getSleepEnd();
 
         if (!start.toLocalDate().equals(end.toLocalDate())) {
-            return true;
+            return start.toLocalDate();
         }
 
-        return start.getHour() < 6;
+        if (start.getHour() < 6) {
+            return start.toLocalDate();
+        }
+
+        return null;
     }
 }
